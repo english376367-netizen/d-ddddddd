@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IOE Grade 4 Vocabulary Practice</title>
+<style>
+:root{--blue:#3157c8;--pale:#eef3ff;--ink:#1d2740;--green:#168653;--red:#c33b4a}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#eef4ff,#f8f4ff);font-family:Arial,sans-serif;color:var(--ink);padding:18px}
+.wrap{max-width:760px;margin:auto}.top{text-align:center;margin:8px 0 18px}.top h1{margin:0;color:#2948a6;font-size:clamp(24px,5vw,34px)}.top p{margin:8px 0;color:#58647c}
+.panel{background:white;border-radius:22px;padding:22px;box-shadow:0 10px 30px #263d7918}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:16px}
+select,button,input{font:inherit;border-radius:12px;padding:12px;border:1px solid #ccd5eb}
+select{background:white;max-width:100%}button{border:0;cursor:pointer;font-weight:700;background:var(--blue);color:white}
+button.secondary{background:#e8edff;color:#2948a6}button:disabled{opacity:.45;cursor:not-allowed}
+.progress{height:9px;background:#e9edf7;border-radius:20px;overflow:hidden;margin:12px 0 20px}.bar{height:100%;width:0;background:#5b7be8;transition:width .2s}
+.meta{display:flex;justify-content:space-between;color:#66718a;font-size:14px;gap:10px}
+.prompt{background:#f1f5ff;border:2px dashed #b9c9ff;border-radius:18px;padding:28px 16px;text-align:center;margin:16px 0}
+.prompt small{display:block;color:#687697;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.meaning{font-size:clamp(25px,6vw,38px);font-weight:800;color:#253f9c;min-height:48px}
+.answer{width:100%;font-size:22px;padding:16px;border:2px solid #cbd5ee;outline:none}
+.answer:focus{border-color:#5877dc;box-shadow:0 0 0 3px #5877dc22}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.actions button{flex:1;min-width:110px}
+.feedback{min-height:52px;padding:12px 4px;font-weight:700;text-align:center}.good{color:var(--green)}.bad{color:var(--red)}
+.hint{background:#fff8df;border-radius:12px;padding:12px;margin-top:8px;color:#745600;display:none}
+.bottom{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
+.stats{display:flex;gap:10px;margin-top:16px}.stat{flex:1;text-align:center;background:#f5f7fc;border-radius:14px;padding:12px}.stat b{display:block;font-size:24px;color:#2948a6}
+.note{font-size:13px;color:#75809a;text-align:center;margin-top:16px}
+@media(max-width:520px){body{padding:10px}.panel{padding:16px}.toolbar{align-items:stretch}.toolbar select{width:100%}.meaning{font-size:29px}.actions button{min-width:calc(50% - 8px)}}
+</style></head><body><div class="wrap">
+<header class="top"><h1>🌟 IOE Grade 4 Vocabulary</h1><p>Read the Vietnamese meaning and type the English word.</p></header>
+<section class="panel">
+<div class="toolbar"><select id="category" aria-label="Choose a topic"><option value="all">All topics</option></select><button class="secondary" id="shuffle">Shuffle words</button></div>
+<div class="meta"><span id="counter">Word 1</span><span id="topic">Topic</span></div><div class="progress"><div class="bar" id="bar"></div></div>
+<div class="prompt"><small>Type the English word</small><div class="meaning" id="meaning">nước Mỹ</div></div>
+<input class="answer" id="answer" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type the English word here...">
+<div class="actions"><button id="check">Check answer</button><button class="secondary" id="hintBtn">💡 Hint</button><button class="secondary" id="skip">Skip</button></div>
+<div class="hint" id="hint"></div><div class="feedback" id="feedback" aria-live="polite"></div>
+<div class="bottom"><button class="secondary" id="prev">← Previous</button><button id="next">Next →</button></div>
+<div class="stats"><div class="stat"><b id="correct">0</b><span>Correct</span></div><div class="stat"><b id="attempted">0</b><span>Attempted</span></div><div class="stat"><b id="percent">0%</b><span>Accuracy</span></div></div>
+</section><p class="note">Hint reveals one more letter each time. You can practise all words or choose one topic.</p>
+</div>
+<script>
+const groups = [{"category": "Countries and nationalities", "items": [{"en": "America", "vi": "nước Mỹ"}, {"en": "American", "vi": "người Mỹ"}, {"en": "Australia", "vi": "nước Úc"}, {"en": "Australian", "vi": "người Úc"}, {"en": "country", "vi": "quốc gia, đất nước"}, {"en": "England", "vi": "nước Anh"}, {"en": "English", "vi": "người Anh"}, {"en": "from", "vi": "từ"}, {"en": "Japan", "vi": "nước Nhật"}, {"en": "Japanese", "vi": "người Nhật"}, {"en": "Malaysia", "vi": "nước Ma-lay-sia"}, {"en": "Malaysian", "vi": "người Ma-lay-sia"}, {"en": "nationality", "vi": "quốc tịch"}, {"en": "Vietnam", "vi": "nước Việt Nam"}, {"en": "Vietnamese", "vi": "người Việt Nam"}]}, {"category": "Days, months and dates", "items": [{"en": "Monday", "vi": "thứ Hai"}, {"en": "Tuesday", "vi": "thứ Ba"}, {"en": "Wednesday", "vi": "thứ Tư"}, {"en": "Thursday", "vi": "thứ Năm"}, {"en": "Friday", "vi": "thứ Sáu"}, {"en": "Saturday", "vi": "thứ Bảy"}, {"en": "Sunday", "vi": "Chủ nhật"}, {"en": "January", "vi": "tháng Một"}, {"en": "February", "vi": "tháng Hai"}, {"en": "March", "vi": "tháng Ba"}, {"en": "April", "vi": "tháng Tư"}, {"en": "May", "vi": "tháng Năm"}, {"en": "June", "vi": "tháng Sáu"}, {"en": "July", "vi": "tháng Bảy"}, {"en": "August", "vi": "tháng Tám"}, {"en": "September", "vi": "tháng Chín"}, {"en": "October", "vi": "tháng Mười"}, {"en": "November", "vi": "tháng Mười một"}, {"en": "December", "vi": "tháng Mười hai"}, {"en": "today", "vi": "hôm nay"}, {"en": "yesterday", "vi": "ngày hôm qua"}, {"en": "tomorrow", "vi": "ngày mai"}, {"en": "weekday", "vi": "ngày trong tuần"}, {"en": "weekend", "vi": "cuối tuần"}, {"en": "school day", "vi": "Ngày đi học"}, {"en": "birthday", "vi": "sinh nhật"}, {"en": "Children’s Day", "vi": "Ngày thiếu nhi"}, {"en": "Christmas", "vi": "Giáng sinh"}, {"en": "New Year", "vi": "Năm mới"}, {"en": "date", "vi": "ngày trong tháng (ngày và tháng)"}, {"en": "festival", "vi": "lễ hội"}, {"en": "firework", "vi": "pháo hoa"}, {"en": "lucky money", "vi": "tiền lì xì"}]}, {"category": "Ordinal numbers", "items": [{"en": "First", "vi": "thứ nhất"}, {"en": "Second", "vi": "thứ hai"}, {"en": "Third", "vi": "thứ ba"}, {"en": "fourth", "vi": "thứ tư"}, {"en": "fifth", "vi": "thứ năm"}, {"en": "sixth", "vi": "thứ sáu"}, {"en": "seventh", "vi": "thứ bảy"}, {"en": "eighth", "vi": "thứ tám"}, {"en": "ninth", "vi": "thứ chín"}, {"en": "tenth", "vi": "thứ mười"}]}, {"category": "Activities", "items": [{"en": "badminton", "vi": "cầu lông"}, {"en": "chess", "vi": "cờ"}, {"en": "collect stamps", "vi": "sưu tập tem"}, {"en": "cook", "vi": "nấu ăn"}, {"en": "dance", "vi": "nhảy, múa, khiêu vũ"}, {"en": "draw", "vi": "vẽ"}, {"en": "go fishing", "vi": "câu cá"}, {"en": "fly", "vi": "bay"}, {"en": "fly a kite", "vi": "thả diều"}, {"en": "go on a boat cruise", "vi": "đi du lịch bằng thuyền"}, {"en": "music", "vi": "âm nhạc"}, {"en": "paint", "vi": "vẽ"}, {"en": "piano", "vi": "đàn dương cầm, đàn piano"}, {"en": "play", "vi": "chơi"}, {"en": "read", "vi": "đọc"}, {"en": "ride", "vi": "cưỡi, lái, đi (xe)"}, {"en": "run", "vi": "chạy"}, {"en": "sing", "vi": "hát"}, {"en": "skate", "vi": "trượt băng, pa tanh"}, {"en": "skip", "vi": "nhảy (dây)"}, {"en": "swim", "vi": "bơi"}, {"en": "swing", "vi": "đu, đánh đu"}, {"en": "table tennis", "vi": "bóng bàn"}, {"en": "take photographs", "vi": "chụp ảnh"}, {"en": "use a computer", "vi": "dùng máy tính"}, {"en": "volleyball", "vi": "bóng chuyền"}, {"en": "walk", "vi": "đi, đi bộ"}, {"en": "watch TV", "vi": "xem ti vi"}, {"en": "write", "vi": "viết"}]}, {"category": "School subjects", "items": [{"en": "Art", "vi": "môn mỹ thuật"}, {"en": "English", "vi": "môn tiếng Anh"}, {"en": "IT (Information Technology)", "vi": "môn công nghệ thông tin"}, {"en": "Maths", "vi": "môn toán"}, {"en": "Music", "vi": "môn âm nhạc"}, {"en": "PE (Physical education)", "vi": "môn thể dục (giáo dục thể chất)"}, {"en": "Science", "vi": "môn khoa học"}, {"en": "subject", "vi": "môn học"}, {"en": "Vietnamese", "vi": "môn tiếng Việt"}]}, {"category": "Food and drinks", "items": [{"en": "beef", "vi": "thịt bò"}, {"en": "bread", "vi": "bánh mì"}, {"en": "chicken", "vi": "gà"}, {"en": "chocolate", "vi": "sô-cô-la"}, {"en": "delicious", "vi": "ngon"}, {"en": "fish", "vi": "cá"}, {"en": "juice", "vi": "nước ép"}, {"en": "lemonade", "vi": "nước chanh"}, {"en": "milk", "vi": "sữa"}, {"en": "noodles", "vi": "mì"}, {"en": "orange", "vi": "cam"}, {"en": "pork", "vi": "thịt lợn"}, {"en": "rice", "vi": "cơm, gạo"}, {"en": "seafood", "vi": "hải sản"}, {"en": "sweet", "vi": "kẹo"}, {"en": "vegetable", "vi": "rau"}, {"en": "water", "vi": "nước"}]}, {"category": "Adjectives", "items": [{"en": "beautiful", "vi": "xinh đẹp, hay"}, {"en": "big", "vi": "to"}, {"en": "fast", "vi": "nhanh"}, {"en": "friendly", "vi": "thân thiện"}, {"en": "funny", "vi": "buồn cười"}, {"en": "old", "vi": "già"}, {"en": "scary", "vi": "đáng sợ"}, {"en": "short", "vi": "thấp, ngắn"}, {"en": "slim", "vi": "mảnh mai"}, {"en": "small", "vi": "nhỏ bé"}, {"en": "strong", "vi": "mạnh mẽ"}, {"en": "tall", "vi": "cao"}, {"en": "thick", "vi": "dày"}, {"en": "thin", "vi": "mỏng"}, {"en": "young", "vi": "trẻ"}]}, {"category": "Places", "items": [{"en": "bookshop", "vi": "hiệu sách"}, {"en": "buy", "vi": "mua"}, {"en": "cinema", "vi": "rạp chiếu phim"}, {"en": "film", "vi": "phim"}, {"en": "medicine", "vi": "thuốc"}, {"en": "pharmacy", "vi": "tiệm thuốc"}, {"en": "supermarket", "vi": "siêu thị"}, {"en": "sweet shop", "vi": "cửa hàng bánh kẹo"}, {"en": "swimming pool", "vi": "bể bơi"}, {"en": "zoo", "vi": "sở thú"}]}, {"category": "Clothes", "items": [{"en": "blouse", "vi": "áo cánh"}, {"en": "jacket", "vi": "áo khoác"}, {"en": "jeans", "vi": "quần bò"}, {"en": "jumper", "vi": "áo len chui đầu"}, {"en": "sandals", "vi": "dép xăng-đan"}, {"en": "scarf", "vi": "khăn"}, {"en": "shoes", "vi": "giày, dép"}, {"en": "skirt", "vi": "váy"}, {"en": "trousers", "vi": "quần"}]}, {"category": "Animals", "items": [{"en": "animal", "vi": "con vật"}, {"en": "bear", "vi": "con gấu"}, {"en": "crocodile", "vi": "con cá sấu"}, {"en": "elephant", "vi": "con voi"}, {"en": "kangaroo", "vi": "con chuột túi"}, {"en": "monkey", "vi": "con khỉ"}, {"en": "tiger", "vi": "con hổ"}, {"en": "zebra", "vi": "con ngựa vằn"}]}, {"category": "Jobs and workplaces", "items": [{"en": "clerk", "vi": "nhân viên văn phòng"}, {"en": "doctor", "vi": "bác sĩ"}, {"en": "driver", "vi": "lái xe"}, {"en": "factory", "vi": "nhà máy"}, {"en": "farmer", "vi": "nông dân"}, {"en": "field", "vi": "cánh đồng"}, {"en": "hospital", "vi": "bệnh viện"}, {"en": "nurse", "vi": "y tá"}, {"en": "office", "vi": "văn phòng"}, {"en": "student", "vi": "học sinh, sinh viên"}, {"en": "worker", "vi": "công nhân"}]}];
+const all = groups.flatMap(g=>g.items.map(x=>({...x,category:g.category})));
+const $=id=>document.getElementById(id);
+let words=[...all], index=0, hintLevel=0, attempted=new Set(), correct=new Set(), answered={};
+groups.forEach((g,i)=>{let o=document.createElement('option');o.value=g.category;o.textContent=g.category;$('category').appendChild(o)});
+function norm(s){return s.trim().toLocaleLowerCase().replace(/[’‘]/g,"'").replace(/\s+/g," ")}
+function render(){
+ const w=words[index]; if(!w)return;
+ $('meaning').textContent=w.vi;$('counter').textContent=`Word ${index+1} / ${words.length}`;$('topic').textContent=w.category;
+ $('bar').style.width=`${(index+1)/words.length*100}%`;
+ $('answer').value=answered[index]?.value||'';$('feedback').textContent=answered[index]?.message||'';$('feedback').className='feedback '+(answered[index]?.ok?'good':answered[index]?'bad':'');
+ hintLevel=0;$('hint').style.display='none';$('hint').textContent='';
+ $('prev').disabled=index===0;$('next').textContent=index===words.length-1?'Finish':'Next →';
+ updateStats(); if(!answered[index])$('answer').focus();
+}
+function updateStats(){ $('correct').textContent=correct.size;$('attempted').textContent=attempted.size;$('percent').textContent=attempted.size?Math.round(correct.size/attempted.size*100)+'%':'0%';}
+function check(){
+ const val=$('answer').value.trim(); if(!val){$('feedback').textContent='Please type an answer first.';$('feedback').className='feedback bad';return}
+ const w=words[index]; attempted.add(index);
+ const ok=norm(val)===norm(w.en);
+ answered[index]={value:val,ok,message:ok?'✓ Correct! Well done!':`✗ Not quite. Correct answer: ${w.en}`};
+ if(ok)correct.add(index);else correct.delete(index);
+ $('feedback').textContent=answered[index].message;$('feedback').className='feedback '+(ok?'good':'bad');$('answer').disabled=true;$('check').disabled=true;updateStats();
+}
+function hint(){
+ const w=words[index];hintLevel=Math.min(hintLevel+1,w.en.length);
+ const reveal=w.en.slice(0,hintLevel);
+ $('hint').style.display='block';$('hint').textContent=`Hint: ${reveal}${'＿'.repeat(Math.max(0,w.en.length-hintLevel))}  (${w.en.length} letters)`;
+}
+function move(n){index=Math.max(0,Math.min(words.length-1,index+n));$('answer').disabled=!!answered[index];$('check').disabled=!!answered[index];render();}
+$('check').onclick=check;$('hintBtn').onclick=hint;$('prev').onclick=()=>move(-1);
+$('next').onclick=()=>{if(index===words.length-1){$('feedback').textContent=`Practice complete! Score: ${correct.size}/${attempted.size} attempted.`;$('feedback').className='feedback good';}else move(1)};
+$('skip').onclick=()=>move(1);
+$('answer').addEventListener('keydown',e=>{if(e.key==='Enter')check()});
+$('category').onchange=()=>{let c=$('category').value;words=c==='all'?[...all]:all.filter(w=>w.category===c);index=0;attempted=new Set();correct=new Set();answered={};$('answer').disabled=false;$('check').disabled=false;render()};
+$('shuffle').onclick=()=>{words=[...words].sort(()=>Math.random()-.5);index=0;attempted=new Set();correct=new Set();answered={};$('answer').disabled=false;$('check').disabled=false;render()};
+const originalRender=render;render();
+</script></body></html>
